@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Five Nights at Freddy's</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<!-- MAIN MENU -->
+<div id="screen-menu" class="screen active">
+  <img id="menu-static-overlay" src="graphics/menu/static.gif" alt=""/>
+  <img id="menu-freddy" src="graphics/menu/freddy_main.png" alt="" onerror="this.src='graphics/menu/fnaf_menu.webp'"/>
+  <div id="menu-content">
+    <div id="menu-title">Five<br>Nights<br>at<br>Freddy's</div>
+    <div id="menu-stars">
+      <span class="mstar hidden" id="mstar-1">★</span>
+      <span class="mstar hidden" id="mstar-2">★</span>
+      <span class="mstar hidden" id="mstar-3">★</span>
+      <span class="mstar hidden" id="mstar-4">★</span>
+      <span class="mstar hidden" id="mstar-5">★</span>
+      <span class="mstar hidden" id="mstar-6">★</span>
+    </div>
+    <div id="menu-items">
+      <div class="mi" id="mi-new">New Game</div>
+      <div class="mi" id="mi-continue">Continue<br><span id="mi-continue-sub" class="mi-sub">Night 1</span></div>
+      <div class="mi" id="mi-night6">6th Night</div>
+      <div class="mi" id="mi-custom">Custom Night</div>
+    </div>
+  </div>
+  <img id="menu-jump" class="hidden" src="" alt=""/>
+</div>
+
+<!-- CUSTOM NIGHT -->
+<div id="screen-custom" class="screen">
+  <div id="custom-title">Customize Night</div>
+  <div id="custom-grid">
+    <div class="cc">
+      <div class="cc-name">Freddy</div>
+      <img class="cc-img" src="graphics/ui/custom_freddy.png" alt=""/>
+      <div class="cc-label">A.I. Level</div>
+      <div class="cc-row">
+        <button class="cc-btn" data-c="freddy" data-d="-1">&lt;</button>
+        <span class="cc-val" id="cv-freddy">0</span>
+        <button class="cc-btn" data-c="freddy" data-d="1">&gt;</button>
+      </div>
+    </div>
+    <div class="cc">
+      <div class="cc-name">Bonnie</div>
+      <img class="cc-img" src="graphics/ui/custom_bonnie.png" alt=""/>
+      <div class="cc-label">A.I. Level</div>
+      <div class="cc-row">
+        <button class="cc-btn" data-c="bonnie" data-d="-1">&lt;</button>
+        <span class="cc-val" id="cv-bonnie">0</span>
+        <button class="cc-btn" data-c="bonnie" data-d="1">&gt;</button>
+      </div>
+    </div>
+    <div class="cc">
+      <div class="cc-name">Chica</div>
+      <img class="cc-img" src="graphics/ui/custom_chica.png" alt=""/>
+      <div class="cc-label">A.I. Level</div>
+      <div class="cc-row">
+        <button class="cc-btn" data-c="chica" data-d="-1">&lt;</button>
+        <span class="cc-val" id="cv-chica">0</span>
+        <button class="cc-btn" data-c="chica" data-d="1">&gt;</button>
+      </div>
+    </div>
+    <div class="cc">
+      <div class="cc-name">Foxy</div>
+      <img class="cc-img" src="graphics/ui/custom_foxy.png" alt=""/>
+      <div class="cc-label">A.I. Level</div>
+      <div class="cc-row">
+        <button class="cc-btn" data-c="foxy" data-d="-1">&lt;</button>
+        <span class="cc-val" id="cv-foxy">0</span>
+        <button class="cc-btn" data-c="foxy" data-d="1">&gt;</button>
+      </div>
+    </div>
+  </div>
+  <div id="custom-bottom">
+    <div id="custom-legend">(0-2)easy &nbsp; (3-6)med &nbsp; (7-12)hard &nbsp; (12+)extreme</div>
+    <button id="btn-custom-ready">READY</button>
+  </div>
+  <button id="btn-custom-back">← BACK</button>
+</div>
+
+<!-- 6AM WIN SCREEN: uses official victory.gif -->
+<div id="win-6am-screen" class="screen" style="background:#000;display:flex;align-items:center;justify-content:center">
+  <img id="win-victory-img" src="" alt="" style="display:none;max-width:100%;max-height:100%;object-fit:contain"/>
+</div>
+
+<!-- GAME OVER -->
+<div id="screen-gameover" class="screen">
+  <img id="go-static-full" src="graphics/menu/static.gif" alt=""/>
+  <div id="go-glitch-layer"></div>
+  <img id="go-hallway" src="" alt=""/>
+  <img id="go-static-overlay" src="graphics/menu/static.gif" alt=""/>
+  <div id="go-text">Game Over</div>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="screen-game" class="screen">
+
+  <!-- Office -->
+  <div id="office-layer">
+    <div id="office-wrap">
+      <img id="office-bg" src="graphics/office/office.webp" alt=""/>
+      <div id="click-door-left"  class="btn-zone btn-door-l"></div>
+      <div id="click-light-left" class="btn-zone btn-light-l"></div>
+      <div id="click-door-right" class="btn-zone btn-door-r"></div>
+      <div id="click-light-right" class="btn-zone btn-light-r"></div>
+    </div>
+    <!-- Overlays sit outside office-wrap so pan/scale can't distort them -->
+    <img id="foxy-rush"     class="hidden ovl" src="" alt=""/>
+    <img id="powerout-fred" class="hidden ovl" src="" alt=""/>
+  </div>
+
+  <!-- Camera layer -->
+  <div id="camera-layer" class="hidden">
+    <div id="cam-feed-wrap">
+      <img id="cam-feed" src="graphics/cameras/1a.webp" alt=""/>
+    </div>
+    <!-- Static GIF overlay on camera feed -->
+    <img id="cam-static-gif" src="graphics/menu/static.gif" alt=""/>
+    <!-- Keep CSS noise layer for switch flash effect -->
+    <div id="cam-noise-layer"></div>
+    <div id="cam-border"></div>
+    <div id="cam-rec-dot"></div>
+    <!-- Map area: room name LEFT above map -->
+    <div id="cam-map-area">
+      <div id="cam-room-name">Show Stage</div>
+      <div id="cam-map-panel">
+        <div id="cam-map-inner">
+          <img id="cam-map-img" src="graphics/cameras/map.png" alt="" onerror="this.style.opacity='0'"/>
+          <div id="cam-map-btns">
+            <button class="cmb sel" data-room="1A" data-name="Show Stage"       style="top:6%;left:28%"><span>CAM</span><span>1A</span></button>
+            <button class="cmb"     data-room="1B" data-name="Dining Area"      style="top:20.5%;left:24%"><span>CAM</span><span>1B</span></button>
+            <button class="cmb"     data-room="1C" data-name="Backstage"        style="top:40%;left:13%"><span>CAM</span><span>1C</span></button>
+            <button class="cmb"     data-room="5"  data-name="Pirate's Cove"    style="top:28%;left:1%"><span>CAM</span><span>5</span></button>
+            <button class="cmb"     data-room="3"  data-name="Supply Closet"    style="top:62.5%;left:9%"><span>CAM</span><span>3</span></button>
+            <button class="cmb"     data-room="2A" data-name="W. Hall"          style="top:71%;left:27%"><span>CAM</span><span>2A</span></button>
+            <button class="cmb"     data-room="2B" data-name="W. Hall Corner"   style="top:81%;left:27%"><span>CAM</span><span>2B</span></button>
+            <button class="cmb"     data-room="4A" data-name="E. Hall"          style="top:71%;left:50%"><span>CAM</span><span>4A</span></button>
+            <button class="cmb"     data-room="4B" data-name="E. Hall Corner"   style="top:81%;left:50%"><span>CAM</span><span>4B</span></button>
+            <button class="cmb"     data-room="7"  data-name="Restrooms"        style="top:25%;left:80%"><span>CAM</span><span>7</span></button>
+            <button class="cmb"     data-room="6"  data-name="Kitchen"          style="top:59%;left:80%"><span>CAM</span><span>6</span></button>
+            <div id="cam-you" style="top:76%;left:44%">YOU</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HUD: always visible when game is active -->
+  <div id="hud-time-box">
+    <div id="hud-time">12 AM</div>
+    <div id="hud-night-lbl">Night <span id="hud-night-num">1</span></div>
+  </div>
+  <div id="hud-power-box">
+    <div id="hud-power-txt">Power left: <span id="hud-pct">100</span>%</div>
+    <div id="hud-usage-row">Usage: <span id="hud-usage"></span></div>
+  </div>
+
+  <!-- Camera button: two stacked chevrons pointing down -->
+  <div id="cam-handle">
+    <svg id="cam-handle-svg" viewBox="0 0 100 40" xmlns="http://www.w3.org/2000/svg">
+      <!-- Top chevron — thicker stroke -->
+      <polyline points="8,5 50,20 92,5"
+        fill="none" stroke="rgba(255,255,255,0.80)" stroke-width="3.5"
+        stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Bottom chevron — slightly dimmer -->
+      <polyline points="8,21 50,36 92,21"
+        fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="3.5"
+        stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <div id="hud-fps">60 FPS</div>
+  <!-- Phone call mute button: top-left, visible during nights 1-5 -->
+  <button id="mute-call-btn" class="hidden" onclick="
+    const m=Sound.muteCall?.();
+    const b=document.getElementById('mute-call-btn');
+    b.textContent=m?'UNMUTE CALL':'MUTE CALL';
+    b.classList.toggle('muted',m);
+  ">MUTE CALL</button>
+
+  <!-- Overlays (z-index order matters) -->
+  <div id="controls-hint" class="hidden">
+    <div id="controls-hint-box">
+      <div class="ch-row">Move mouse to bottom edge → Camera</div>
+      <div class="ch-row">Click DOOR / LIGHT buttons</div>
+      <div class="ch-row">Move mouse to screen edges → Pan</div>
+      <div class="ch-row">ESC → Pause</div>
+    </div>
+  </div>
+
+  <div id="night-intro" class="hidden">
+    <div id="night-intro-txt">Night <span id="night-intro-num">1</span></div>
+  </div>
+
+  <div id="jumpscare-overlay" class="hidden">
+    <img id="jumpscare-img" src="" alt=""/>
+  </div>
+  <img id="hallucination" class="hidden oabs" style="z-index:45"
+    src="graphics/jumpscares/golden_freddy.webp" alt=""/>
+
+  <div id="pause-menu" class="hidden">
+    <div id="pause-box">
+      <div class="pmi" id="p-resume">Continue</div>
+      <div class="pmi" id="p-restart">Restart Night</div>
+      <div class="pmi" id="p-menu">Main Menu</div>
+    </div>
+  </div>
+
+  <div id="win-screen" class="hidden">
+    <div id="win-am">6 AM</div>
+    <div id="win-sub">You survived!</div>
+    <div id="win-btns">
+      <button class="wbtn" id="btn-win-next">Next Night</button>
+      <button class="wbtn" id="btn-win-menu">Main Menu</button>
+    </div>
+  </div>
+
+</div><!-- end screen-game -->
+
+<!-- Custom confirm dialog -->
+<div id="confirm-dialog" class="hidden">
+  <div id="confirm-box">
+    <div id="confirm-msg"></div>
+    <div id="confirm-btns">
+      <button id="confirm-yes">YES</button>
+      <button id="confirm-no">NO</button>
+    </div>
+  </div>
+</div>
+<div id="fade-overlay"></div>
+
+<script src="js/save.js"></script>
+<script src="js/sound.js"></script>
+<script src="js/power.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/office.js"></script>
+<script src="js/cameras.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/menu.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>
